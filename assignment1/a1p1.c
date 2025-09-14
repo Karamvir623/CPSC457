@@ -8,36 +8,74 @@
 int main(int arg_c, char **pp_arg_v)
 {
 	pid_t pid, pid_child_search;
-	int toParent;
 	int fromChild;
-	int i = 0;
+	char delimiter_value ;
+	int exit_value;
+	char input_matrix[100][1000];
+	for (int i = 0; i < 3; i++) {
+        printf("argv[%d] = %s\n", i, pp_arg_v[i]);
+    }
+	
 
-	while(i != 30){
+	for(int row =0; row<100; row++){
+		printf("ROW: %d\n", row);
+		for(int col =0; col<1000; col++){
+			if(scanf("%c%c", &input_matrix[row][col], &delimiter_value) == 1) printf("ERROR");
+			printf("%c%c", input_matrix[row][col], delimiter_value);
+			
+		 }
+		
+	}
+	
+	
+
+
+	int matrix_row = 0;
+	int matrix_col = 0;
+	while(matrix_row != 100){
 		pid = fork();
 		if (pid < 0) {
 			fprintf(stderr, "Fork Failed");
 			exit(-1);
 		}
 		else if (pid == 0){
-			printf("Child %d (PID %d): Searching row %d\n", i, getpid(), i);
+			matrix_col = 0;
+			exit_value = 0;
+			printf("Child %d (PID %d): Searching row %d\n", matrix_row, getpid(), matrix_row);
+			
 			// sleep(1); // allow parent to wait
 			// printf("Enter an integer between 0 and 255: ");
-			// scanf("%d", &toParent);
-			if( i == 10) exit(1);
-			exit(0);
+			while(matrix_col != 1000){
+				//printf("%c%c", matrix_value, delimiter_value);
+				if(input_matrix[matrix_row][matrix_col] == '1') {
+					printf("value= %c,", input_matrix[matrix_row][matrix_col]);
+					printf(" COLUMN = %d\n", matrix_col);
+					printf(" row = %d\n", matrix_row);
+					exit_value = matrix_col;	
+				}
+				
+				matrix_col++;
+				
+			}
+			
+			exit(exit_value);
 
 		}
 		
-		i++;
+		matrix_row++;
 		
 	}
+	int treasure_row = 0;
+	int treasure_col;
 	sleep(1);
 	while (pid > 0) {
 		pid_child_search = wait(&fromChild);
-		if(WEXITSTATUS(fromChild) == 1) {
-			printf("Parent: The treasure was found by child with PID %d\n", pid_child_search);
+		treasure_col = WEXITSTATUS(fromChild); 
+		if(treasure_col > 0) {
+			printf("Parent: The treasure was found by child with PID %d at row %d and column %d\n", pid_child_search, treasure_row,treasure_col);
 			break;
 		}
+		treasure_row++;
 		
 	
 	}
