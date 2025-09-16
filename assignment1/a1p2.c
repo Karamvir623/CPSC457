@@ -18,7 +18,7 @@ int main() {
 	int fromChild;
 
 	//example input
-	int upperbound = 200; 
+	int upperbound = 1000; 
 	int lowerbound = 100; 
 	int n = 3; 
 
