@@ -31,11 +31,25 @@ int main() {
 	int sub_upperbound;
 	
 	int i;
-	for(i = 1; i <= 1; i++){
+	for(i = 1; i <= n; i++){
+		if( i == 1){
 		sub_lowerbound = lowerbound;
 		sub_upperbound = sub_lowerbound + (i * n_section);
-		printf("%d, %d\n",sub_lowerbound,sub_upperbound);
+		printf("%d, %d\n",sub_lowerbound, sub_upperbound);
+		}
+		else if (i > 1 & i < n){
+		sub_lowerbound = lowerbound + ((i-1) * n_section) + 1;
+		sub_upperbound = lowerbound + ((i) * n_section);
+		printf("%d, %d\n",sub_lowerbound, sub_upperbound);
+		}
+		else if (i == n){
+		sub_lowerbound = lowerbound + ((i-1) * n_section) + 1;
+		sub_upperbound = upperbound;
+		printf("%d, %d\n",sub_lowerbound, sub_upperbound);
+		}
 	}
+
+
 
 
    
