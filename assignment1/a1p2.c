@@ -6,6 +6,14 @@
 #include <sys/wait.h>
 #include <math.h>
 
+// Questions:
+// What should be the size of MAX_PRIMES_PER_CHILD
+// Edge Cases:
+// N should be greater than equal to 0, and an integer 
+// lowerbound should be less than or equal to upperbound
+// handle cases when N < number of range values
+
+
 #define MAX_PRIMES_PER_CHILD 1000000 //ask about what range should be appropriate
 
 // function to test if input is a prime number
@@ -35,8 +43,7 @@ int main() {
 	int sub_lowerbound;
 	int sub_upperbound;
 	
-	int i;
-	for(i = 1; i <= n; i++){
+	for(int i = 1; i <= n; i++){
 		
 		pid_t pid = fork(); //Child Process
 		
