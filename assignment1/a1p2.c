@@ -29,10 +29,23 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    int lowerbound = atoi(argv[1]);
+	int lowerbound = atoi(argv[1]);
     int upperbound = atoi(argv[2]);
     int n = atoi(argv[3]);
 
+	
+	//edge case 1: n <= 0.
+	if(n <= 0){
+		fprintf(stderr, "Invalid input. Enter N < 0.)";
+        exit(1);
+	}
+
+	//edge case 2: lowerboundry > upperboundry
+	if(lowerbound > upperbound){
+		fprintf(stderr, "Invalid input. Enter LOWER_BOUND > UPPER_BOUND.");
+        exit(1);
+	}
+	
 	//logic for assigning ranges for each process
 	int range = (upperbound - lowerbound) + 1;
 	int n_section = range/n;
