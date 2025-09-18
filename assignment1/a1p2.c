@@ -8,14 +8,11 @@
 #include <stdlib.h>
 
 // Questions:
-// What should be the size of MAX_PRIMES_PER_CHILD (should be a defined or dynamic)
 // Edge Cases:
 // N should be greater than equal to 0, and an integer 
 // lowerbound should be less than or equal to upperbound
 // handle cases when N < number of range values
 
-
-#define MAX_PRIMES_PER_CHILD 100000 //ask about what range should be appropriate
 
 // function to test if input is a prime number
 int is_prime(int num) {
@@ -36,18 +33,19 @@ int main(int argc, char *argv[]) {
     int upperbound = atoi(argv[2]);
     int n = atoi(argv[3]);
 
-
-	//memory layout suggested by assignment sheet
-	int shm_size =  (n * MAX_PRIMES_PER_CHILD) * sizeof(int); // shared memory segment size
-	int shmid = shmget(IPC_PRIVATE, shm_size, IPC_CREAT | 0666); // shared memory creation
-	int *shm_ptr = (int *) shmat(shmid, NULL, 0); // attaches shared memory block
-
 	//logic for assigning ranges for each process
 	int range = (upperbound - lowerbound) + 1;
 	int n_section = range/n;
 	
 	int sub_lowerbound;
 	int sub_upperbound;
+	
+	//memory layout suggested by assignment sheet
+	int shm_size =  (n * range) * sizeof(int); // shared memory segment size
+	int shmid = shmget(IPC_PRIVATE, shm_size, IPC_CREAT | 0666); // shared memory creation
+	int *shm_ptr = (int *) shmat(shmid, NULL, 0); // attaches shared memory block
+
+
 	
 	for(int i = 1; i <= n; i++){
 		
@@ -79,8 +77,8 @@ int main(int argc, char *argv[]) {
 
 			
 			int memory_block_index = i - 1;
-			int shm_start_ind = memory_block_index * MAX_PRIMES_PER_CHILD;
-			int shm_end_ind = (memory_block_index + 1) * MAX_PRIMES_PER_CHILD - 1;
+			int shm_start_ind = memory_block_index * range;
+			int shm_end_ind = (memory_block_index + 1) * range - 1;
 
 			//checking if numbers in each range are prime numbers
 			for(int number = sub_lowerbound; number <= sub_upperbound; number++){
@@ -102,7 +100,7 @@ int main(int argc, char *argv[]) {
     printf("Parent: All children finished. Primes found:\n");
 
     // Parent reads shared memory
-    for (int i = 0; i < n * MAX_PRIMES_PER_CHILD; i++) {
+    for (int i = 0; i < n * range; i++) {
         if (shm_ptr[i] != 0) {
             printf("%d ", shm_ptr[i]);
         }
