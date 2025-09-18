@@ -26,11 +26,16 @@ int is_prime(int num) {
 	return 1;
 }
 
-int main() {
-	//example input
-	int upperbound = 100; 
-	int lowerbound = 0; 
-	int n = 10; 
+int main(int argc, char *argv[]) {
+    if (argc != 4) {
+        fprintf(stderr, "Invalid input. Correct order: %s LOWER_BOUND UPPER_BOUND N\n", argv[0]);
+        exit(1);
+    }
+
+    int lowerbound = atoi(argv[1]);
+    int upperbound = atoi(argv[2]);
+    int n = atoi(argv[3]);
+
 
 	//memory layout suggested by assignment sheet
 	int shm_size =  (n * MAX_PRIMES_PER_CHILD) * sizeof(int); // shared memory segment size
