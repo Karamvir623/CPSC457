@@ -86,12 +86,10 @@ int main(int argc, char *argv[]) {
 			for(int number = sub_lowerbound; number <= sub_upperbound; number++){
 				if( is_prime(number) == 1){
 					shm_ptr[shm_start_ind] = number;
-					printf("%d ", number); 
 					shm_start_ind++;
 					if (shm_start_ind > shm_end_ind) break;
 				}
-			}
-			printf("\n");	
+			}	
             exit(0);
 		}
 	}
