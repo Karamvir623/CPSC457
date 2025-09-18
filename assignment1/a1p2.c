@@ -5,9 +5,10 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <math.h>
+#include <stdlib.h>
 
 // Questions:
-// What should be the size of MAX_PRIMES_PER_CHILD
+// What should be the size of MAX_PRIMES_PER_CHILD (should be a defined or dynamic)
 // Edge Cases:
 // N should be greater than equal to 0, and an integer 
 // lowerbound should be less than or equal to upperbound
@@ -27,9 +28,9 @@ int is_prime(int num) {
 
 int main() {
 	//example input
-	int upperbound = 1000; 
-	int lowerbound = 100; 
-	int n = 3; 
+	int upperbound = 100; 
+	int lowerbound = 0; 
+	int n = 10; 
 
 	//memory layout suggested by assignment sheet
 	int shm_size =  (n * MAX_PRIMES_PER_CHILD) * sizeof(int); // shared memory segment size
@@ -90,11 +91,23 @@ int main() {
 		}
 	}
 
-	// Parent waits for all n number of children
+	//Parent waits for all n number of children
     for (int i = 0; i < n; i++) {
         wait(NULL);
     }
-    printf("All children finished.\n");
 
+    printf("Parent: All children finished. Primes found:\n");
+
+    // Parent reads shared memory
+    for (int i = 0; i < n * MAX_PRIMES_PER_CHILD; i++) {
+        if (shm_ptr[i] != 0) {
+            printf("%d ", shm_ptr[i]);
+        }
+    }
+    
+    shmdt(shm_ptr);
+    shmctl(shmid, IPC_RMID, NULL);
+   
     return 0;
+    
 }
