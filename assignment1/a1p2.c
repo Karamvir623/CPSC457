@@ -5,17 +5,19 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <stdlib.h>
+#include <math.h>
 
 
 // function to test if input is a prime number
 int is_prime(int num) {
 	if (num < 2) return 0;
-	for (int i = 2; i*i <= num; i++) {
+	for (int i = 2; i <= sqrt(num); i++) {
 		if (num % i == 0) return 0;
 	}
 	return 1;
 }
 
+// main program
 int main(int argc, char *argv[]) {
     if (argc != 4) {
         fprintf(stderr, "Invalid input. Correct order: %s LOWER_BOUND UPPER_BOUND N\n", argv[0]);
@@ -49,8 +51,8 @@ int main(int argc, char *argv[]) {
 	int range = (upperbound - lowerbound) + 1;
 	int n_section = range/n;
 	
-	int sub_lowerbound;
-	int sub_upperbound;
+	int sub_lowerbound = 0;
+	int sub_upperbound = 0;
 
 	//edge case 4: n > range
     if(n > range){
@@ -62,7 +64,6 @@ int main(int argc, char *argv[]) {
 	int shm_size =  (n * range) * sizeof(int); // shared memory segment size
 	int shmid = shmget(IPC_PRIVATE, shm_size, IPC_CREAT | 0666); // shared memory creation
 	int *shm_ptr = (int *) shmat(shmid, NULL, 0); // attaches shared memory block
-
 
 	
 	for(int i = 0; i <= n - 1; i++){
@@ -92,7 +93,7 @@ int main(int argc, char *argv[]) {
             }
 
 			
-			printf("Child %d checking range [%d, %d]\n", getpid(), sub_lowerbound, sub_upperbound);
+			printf("Child PID %d checking range [%d, %d]\n", getpid(), sub_lowerbound, sub_upperbound);
 
 			
 			int memory_block_index = i;
