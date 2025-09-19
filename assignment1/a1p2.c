@@ -4,7 +4,6 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/wait.h>
-#include <math.h>
 #include <stdlib.h>
 
 
@@ -117,7 +116,7 @@ int main(int argc, char *argv[]) {
         wait(NULL);
     }
 
-    printf("Parent: All children finished. Primes found:\n");
+    printf("\nParent: All children finished. Primes found:\n");
 
     // Parent reads shared memory
     for (int i = 0; i < n * range; i++) {
