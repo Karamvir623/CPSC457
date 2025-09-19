@@ -7,12 +7,6 @@
 #include <math.h>
 #include <stdlib.h>
 
-// Questions:
-// Edge Cases:
-// N should be greater than equal to 0, and an integer 
-// lowerbound should be less than or equal to upperbound
-// handle cases when N < number of range values
-
 
 // function to test if input is a prime number
 int is_prime(int num) {
@@ -36,7 +30,7 @@ int main(int argc, char *argv[]) {
 	
 	//edge case 1: n <= 0.
 	if(n <= 0){
-		fprintf(stderr, "Invalid input. Enter N < 0.)";
+		fprintf(stderr, "Invalid input. Enter N < 0.");
         exit(1);
 	}
 
@@ -45,6 +39,12 @@ int main(int argc, char *argv[]) {
 		fprintf(stderr, "Invalid input. Enter LOWER_BOUND > UPPER_BOUND.");
         exit(1);
 	}
+
+	if(lowerbound < 0 || upperbound < 0){
+		fprintf(stderr, "Invalid input. Enter LOWER_BOUND and UPPER_BOUND > 0.");
+        exit(1);
+	}
+		
 	
 	//logic for assigning ranges for each process
 	int range = (upperbound - lowerbound) + 1;
@@ -52,6 +52,12 @@ int main(int argc, char *argv[]) {
 	
 	int sub_lowerbound;
 	int sub_upperbound;
+
+	//edge case 4: n > range
+    if(n > range){
+        n_section = 1;
+        n = range;
+    }
 	
 	//memory layout suggested by assignment sheet
 	int shm_size =  (n * range) * sizeof(int); // shared memory segment size
@@ -60,7 +66,7 @@ int main(int argc, char *argv[]) {
 
 
 	
-	for(int i = 1; i <= n; i++){
+	for(int i = 0; i <= n - 1; i++){
 		
 		pid_t pid = fork(); //Child Process
 		
@@ -73,23 +79,24 @@ int main(int argc, char *argv[]) {
 		//CHILD
 		else if(pid == 0){
 
-			if(i == 1){
-				sub_lowerbound = lowerbound;
-				sub_upperbound = sub_lowerbound + (i * n_section) - 1;
-			}
-			else if (i > 1 && i < n){
-				sub_lowerbound = lowerbound + ((i-1) * n_section);
-				sub_upperbound = lowerbound + (i * n_section) - 1;
-			}
-			else if (i == n){
-				sub_lowerbound = lowerbound + ((i-1) * n_section);
-				sub_upperbound = upperbound;
-			}
+			if(i == 0){
+                sub_lowerbound = lowerbound;
+                sub_upperbound = lowerbound + ((i + 1) * n_section) - 1;
+            }
+            else if (i > 0 && i < n - 1){
+                sub_lowerbound = lowerbound + (i * n_section);
+                sub_upperbound = lowerbound + ((i + 1) * n_section) - 1;    
+            }
+            else if (i == n - 1){
+                sub_lowerbound = lowerbound + (i * n_section);
+                sub_upperbound = upperbound;
+            }
+
 			
 			printf("Child %d checking range [%d, %d]\n", getpid(), sub_lowerbound, sub_upperbound);
 
 			
-			int memory_block_index = i - 1;
+			int memory_block_index = i;
 			int shm_start_ind = memory_block_index * range;
 			int shm_end_ind = (memory_block_index + 1) * range - 1;
 
