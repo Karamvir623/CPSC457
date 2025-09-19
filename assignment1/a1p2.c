@@ -7,6 +7,9 @@
 #include <stdlib.h>
 #include <math.h>
 
+//Note:
+//for decimal inputs: the program will output primes for the floor of the lowerbound, upperbound, and n value.
+
 
 //Function: is_prime
 //Purpose : 
