@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
 
 	//edge case 2: ensures lowerboundry must be less than or equal to upperboundry
 	if(lowerbound > upperbound){
-		fprintf(stderr, "Invalid input. Enter LOWER_BOUND < UPPER_BOUND.\n");
+		fprintf(stderr, "Invalid input. Enter LOWER_BOUND <= UPPER_BOUND.\n");
         exit(1);
 	}
 
@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
 	//edge case 4: ensures extra processes are not created if each number in the entered range has been checked.
     if(n > range){
         n_section = 1; // each process handles exactly 1 number
-        n = range; // // reduce number of processes to match numbers
+        n = range; // reduce number of processes to match numbers
     }
 	
 	// shared memory setup
@@ -103,7 +103,7 @@ int main(int argc, char *argv[]) {
                 sub_lowerbound = lowerbound + (i * n_section);
                 sub_upperbound = lowerbound + ((i + 1) * n_section) - 1;    
             }
-            else if (i == n - 1){ // for last subrange to ensure all values are included (including remainders)
+            else if (i == n - 1){ // for last subrange to ensure all values are included (including remainder)
                 sub_lowerbound = lowerbound + (i * n_section);
                 sub_upperbound = upperbound;
             }
@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
 				if( is_prime(number) == 1){ // if prime, writes to shared memory
 					shm_ptr[shm_start_ind] = number;
 					shm_start_ind++;
-					if (shm_start_ind > shm_end_ind) break;
+					if (shm_start_ind > shm_end_ind) break; //if there is overflow
 				}
 			}	
             exit(0); // child finishes
