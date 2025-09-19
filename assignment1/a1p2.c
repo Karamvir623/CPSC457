@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
                 sub_upperbound = upperbound;
             }
 
-			 // shows child process info
+			// shows child process info
 			printf("Child PID %d checking range [%d, %d]\n", getpid(), sub_lowerbound, sub_upperbound);
 
 			// computes where this child writes results in shared memory (ensuring no overlap)
@@ -117,7 +117,7 @@ int main(int argc, char *argv[]) {
 			int shm_start_ind = shm_ind * range; // start of memory for n child
 			int shm_end_ind = (shm_ind + 1) * range - 1;//end of memory for n child 
 
-			//checking if numbers in each range are prime numbers
+			// checking if numbers in each range are prime numbers
 			for(int number = sub_lowerbound; number <= sub_upperbound; number++){
 				if( is_prime(number) == 1){ // if prime, writes to shared memory
 					shm_ptr[shm_start_ind] = number;
@@ -129,12 +129,12 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	//parent process, waits for all children to finish
+	// parent process, waits for all children to finish
     for (int i = 0; i < n; i++) {
         wait(NULL);
     }
 
-	 // parent reads shared memory
+	// parent reads shared memory
     printf("\nParent: All children finished. Primes found:\n");
     for (int i = 0; i < n * range; i++) {
         if (shm_ptr[i] != 0) { // shm default is 0
@@ -143,7 +143,7 @@ int main(int argc, char *argv[]) {
     }
 	 printf("\n");
 
-	 // detaches and removes shared memory
+	// detaches and removes shared memory
     shmdt(shm_ptr);
     shmctl(shmid, IPC_RMID, NULL);
 
