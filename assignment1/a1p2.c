@@ -70,7 +70,10 @@ int main(int argc, char *argv[]) {
     }
 	
 	// shared memory setup
-	int shm_size =  (n * range) * sizeof(int); // shared memory size (ensures enough memory per child)
+	// instead of using a fixed value, MAX_PRIMES_PER_CHILD is equal to n * range 
+	// since every value in the input range will notbe a prime value, this will ensure there is 
+	// enough memory for each prime number per child can be written to memory
+	int shm_size =  (n * range) * sizeof(int); // shared memory size (ensures enough memory per child) 
 	int shmid = shmget(IPC_PRIVATE, shm_size, IPC_CREAT | 0666); // shared memory creation
 	int *shm_ptr = (int *) shmat(shmid, NULL, 0); // attaches shared memory to process
 
